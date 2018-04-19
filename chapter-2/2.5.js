@@ -25,25 +25,33 @@
 
 import LinkedList from '../helpers/LinkedList';
 
+const removeUndefined = (...values) => values.filter(value => value !== undefined);
+
+const sum = values => values.reduce((total, value) => total += value, 0);
+
+const splitIntoPlaceValues = (num) => {
+  let place = 1;
+  let currentValue = num;
+  const result = {};
+  while (currentValue >= place) {
+    result[place] = Math.floor(currentValue % (place * 10) / place);
+    place *= 10;
+  }
+  return result;
+};
+
 const sumLists = (llA, llB) => {
   const result = new LinkedList(null);
-  let carry = 0, sum;
-  let nodeA = llA;
-  let nodeB = llB;
-  while(nodeA || nodeB) {
-    sum = (nodeA.value || 0) + (nodeB.value || 0) + carry;
-    if (sum >= 10) {
-      carry = Math.floor(sum / 10);
-      sum = sum % 10;
-    } else {
-      carry = 0;
-    }
-    result.addToTail(sum);
+  let nodeA = llA, nodeB = llB;
+  let placeValues = {};
+  while (nodeA || nodeB) {
+    placeValues = splitIntoPlaceValues(sum(removeUndefined(nodeA.value, nodeB.value, placeValues[10])))
+    result.addToTail(placeValues[1]);
     nodeA = nodeA.next;
     nodeB = nodeB.next;
   }
-  if (carry) {
-    result.addToTail(carry);
+  if (placeValues[10]) {
+    result.addToTail(placeValues[10]);
   }
   return result.next;
 };
