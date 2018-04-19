@@ -30,6 +30,9 @@ const removeUndefined = (...values) => values.filter(value => value !== undefine
 const sum = values => values.reduce((total, value) => total += value, 0);
 
 const splitIntoPlaceValues = (num) => {
+  if (num === 0) {
+    return { '1': 0 };
+  }
   let place = 1;
   let currentValue = num;
   const result = {};
